@@ -1,0 +1,21 @@
+<html>
+	<head>
+		<title>Whatever</title>
+		<script type="text/javascript" src="http://code.jquery.com/jquery-1.10.2.min.js">
+		<script type="text/javascript">
+			(function($) {
+				$("input[type='button']").click(function() {
+					$.getJSON('/symbol/' + $("#symbol").val(), function(data) {
+						console.log(data);
+						$('span').html(data);
+					});
+				});
+			})(jQuery);
+		</script>
+	</head>
+	<body>
+		<input type="text" id="symbol">
+		<input type="button">
+		<span></span>
+	</body>
+</html>

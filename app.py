@@ -4,6 +4,7 @@ import urllib3
 import lxml.html
 from flask import Flask
 from flask import Response
+from flask import render_template
 import json
 
 app = Flask(__name__)
@@ -12,7 +13,7 @@ FLYBASE_URL = 'http://flybase.org/cgi-bin/quicksearch.cgi'
 
 @app.route('/')
 def root():
-    return 'Welcome to the Flybase abbreviations proxy'
+    return render_template("index.html")
 
 @app.route('/symbol/<symbol_id>')
 def symbol(symbol_id):
