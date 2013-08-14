@@ -1,7 +1,9 @@
 import os
+import sys
 import urllib3
 import lxml.html
 from flask import Flask
+import json
 
 app = Flask(__name__)
 http = urllib3.PoolManager()
@@ -11,8 +13,11 @@ FLYBASE_URL = 'http://flybase.org/cgi-bin/quicksearch.cgi'
 def root():
     return 'Welcome to the Flybase abbreviations proxy'
 
-@app.route('/symbol')
-def symbol():
+@app.route('/symbol/<symbol_id>')
+def symbol(symbol_id):
+
+	# DEBUG
+	print symbol_id
 
 	# make a POST request against flybase
 	params = {
@@ -21,8 +26,8 @@ def symbol():
 		'field': 'SYM',
 		'db': 'fbab',
 		'caller': 'quicksearch',
-		# 'context': 'Df(2L)net3'
-		'context': 'Df(2L)ed50001'
+		# 'context': 'Df(2L)ed50001'
+		'context': symbol_id
 	}
 	response = http.request('POST', FLYBASE_URL, params)
 	
@@ -33,10 +38,20 @@ def symbol():
 		parsed_html = lxml.html.fromstring(response.data)
 
 		# extract the necessary values from the response
+		responded = False
+		for tr in parsed_html.cssselect('div#content table#top_table>tbody>tr'):
+			if tr.find('th').text == 'Sequence coordinates':
+				responded = True
 
-		return response.data
+				coordinates = []
+				for c in tr.cssselect('td>div>div.twocol_c_item_one'):
+					coordinates.append(c.text)
 
-	
-	
-	# respond to this request
+				return json.dumps({'coordinates': coordinates})
+
+	 	if not responded:
+	 		return json.dumps({'coordinates': []})
+
+if __name__ == "__main__":
+    app.run()
 	
