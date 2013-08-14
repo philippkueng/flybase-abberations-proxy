@@ -3,6 +3,7 @@ import sys
 import urllib3
 import lxml.html
 from flask import Flask
+from flask import Response
 import json
 
 app = Flask(__name__)
@@ -47,7 +48,11 @@ def symbol(symbol_id):
 				for c in tr.cssselect('td>div>div.twocol_c_item_one'):
 					coordinates.append(c.text)
 
-				return json.dumps({'coordinates': coordinates})
+				# origin = request.headers.get('Origin', '')
+				response = Response(json.dumps({'coordinates': coordinates}), status=200, mimetype='application/json')
+				# response.headers['Access-Control-Allow-Origin'] = origin
+				# response.headers['Access-Control-Allow-Credentials'] = 'true'
+				return response
 
 	 	if not responded:
 	 		return json.dumps({'coordinates': []})
