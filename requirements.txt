@@ -4,6 +4,6 @@ MarkupSafe==0.18
 Werkzeug==0.9.3
 gunicorn==17.5
 itsdangerous==0.23
-lxml==2.3
+lxml==4.6.5
 urllib3==1.6
 wsgiref==0.1.2
